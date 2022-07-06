@@ -141,11 +141,11 @@ export default class {
     } else {
       $(`#arrow-icon${this.index}`).css({ transform: 'rotate(90deg)'})
       $(`#status-bills-container${this.index}`)
-        .html("")
+      .html("")    // Correction
       this.counter ++
     }
-
-    bills.forEach(bill => {
+    // Dashboard Error
+    filteredBills(bills, getStatus(this.index)).forEach(bill => {
       $(`#open-bill${bill.id}`).click((e) => this.handleEditTicket(e, bill, bills))
     })
 

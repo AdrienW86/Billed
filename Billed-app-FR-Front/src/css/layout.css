@@ -49,3 +49,8 @@
   margin:auto;
   border-radius: 8px;
 }
+
+.error {
+  color: red;
+  display: none;
+}

@@ -1,7 +1,6 @@
 import VerticalLayout from './VerticalLayout.js'
 import ErrorPage from "./ErrorPage.js"
 import LoadingPage from "./LoadingPage.js"
-
 import Actions from './Actions.js'
 
 const row = (bill) => {
@@ -47,6 +46,17 @@ export default ({ data: bills, loading, error }) => {
   } else if (error) {
     return ErrorPage(error)
   }
+
+  // Bug de l'affichage par date des billets
+  let billsByDate;
+
+  if(bills){ 
+    billsByDate = bills.sort(function(a,b){
+      let c = new Date(a.date);
+      let d = new Date(b.date);
+      return d - c;
+    });
+  }
   
   return (`
     <div class='layout'>
@@ -69,7 +79,7 @@ export default ({ data: bills, loading, error }) => {
               </tr>
           </thead>
           <tbody data-testid="tbody">
-            ${rows(bills)}
+            ${rows(billsByDate)}
           </tbody>
           </table>
         </div>

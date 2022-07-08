@@ -8,7 +8,7 @@ const row = (bill) => {
     <tr>
       <td>${bill.type}</td>
       <td>${bill.name}</td>
-      <td>${bill.date}</td>
+      <td>${bill.formatedDate ?? bill.date}</td>   
       <td>${bill.amount} €</td>
       <td>${bill.status}</td>
       <td>
@@ -17,10 +17,13 @@ const row = (bill) => {
     </tr>
     `)
   }
-
+// Correction pour l'affichage par ordre décroissant des billets
 const rows = (data) => {
-  return (data && data.length) ? data.map(bill => row(bill)).join("") : ""
+  return (data && data.length) ? data.sort((a,b) => {if(b.date > a.date){
+    return -1;
+  }}).map(bill => row(bill)).join("") : ""
 }
+// Fin correction
 
 export default ({ data: bills, loading, error }) => {
   
@@ -47,17 +50,30 @@ export default ({ data: bills, loading, error }) => {
     return ErrorPage(error)
   }
 
-  // Bug de l'affichage par date des billets
-  let billsByDate;
+   // Fix bug display bills by date
+   let sortBills;
+   if(bills){
+   const sortByMapped = (map,compareFn) => (a,b) => -compareFn(map(a),map(b));
+   const toDate = e => new Date(e.date);
+   const byValue = (a, b) => b-a;
+   const byDate = sortByMapped(toDate, byValue);
+   sortBills = [...bills].sort(byDate);
+   console.log(sortBills);
+   }
+/* code inutile */
 
-  if(bills){ 
-    billsByDate = bills.sort(function(a,b){
-      let c = new Date(a.date);
-      let d = new Date(b.date);
-      return d - c;
-    });
-  }
-  
+  // Bug de l'affichage par date des billets
+  // let billsByDate;
+
+  // if(bills){ 
+  //   billsByDate = bills.sort(function(a,b){
+  //     let c = new Date(a.date);
+  //     let d = new Date(b.date);
+  //     return d - c;
+  //   });
+  // }
+   
+
   return (`
     <div class='layout'>
       ${VerticalLayout(120)}
@@ -79,7 +95,7 @@ export default ({ data: bills, loading, error }) => {
               </tr>
           </thead>
           <tbody data-testid="tbody">
-            ${rows(billsByDate)}
+            ${rows(sortBills)}
           </tbody>
           </table>
         </div>

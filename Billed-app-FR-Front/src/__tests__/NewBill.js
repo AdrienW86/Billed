@@ -65,7 +65,7 @@ describe("When I am on NewBill Page",() => {
 
       document.body.innerHTML = NewBillUI()
       const newBill = new NewBill ({
-        document, onNavigate
+        document, onNavigate, store: null, localStorage: window.localStorage
       })
 
       // Création d'un billet test
@@ -90,7 +90,7 @@ describe("When I am on NewBill Page",() => {
     newBill.create = (newBill) => newBill
     newBill.fileUrl = testBill.fileUrl
     newBill.fileName = testBill.fileName 
-    newBill.status = testBill.status
+  //  newBill.status = testBill.status
     document.querySelector(`select[data-testid="expense-type"]`).value = testBill.type
     document.querySelector(`input[data-testid="expense-name"]`).value = testBill.name
     document.querySelector(`input[data-testid="amount"]`).value = testBill.amount

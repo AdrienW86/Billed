@@ -50,7 +50,7 @@ export default ({ data: bills, loading, error }) => {
     return ErrorPage(error)
   }
 
-   // Fix bug display bills by date
+   // Fix bug 
    let sortBills;
    if(bills){
    const sortByMapped = (map,compareFn) => (a,b) => -compareFn(map(a),map(b));

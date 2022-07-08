@@ -39,22 +39,21 @@ describe("Given I am connected as an employee", () => {
      test("Then, it's not an image, it should display an error message", ()=> {
 
       document.body.innerHTML = NewBillUI()
-
       const newBill = new NewBill({
         document, onNavigate, store: mockStore
       })
       const handleChangeFile = jest.fn(() => newBill.handleChangeFile);
-       const inputFile = screen.getByTestId("file")
-
-       inputFile.addEventListener("change", handleChangeFile)
-
-       fireEvent.change(inputFile, {target: {
-        files: [new File(["test.jpg"], "test.jpg", {type: "image/jpg"})],
-       }
-      })
-
+      const inputFile = screen.getByTestId("file")
+      inputFile.addEventListener("change", handleChangeFile)
+      fireEvent.change(inputFile, 
+        {
+          target: {
+          files: [new File(["test.pdf"], "test.pdf", {type: "image/pdf"})],
+          }
+        }
+      )
       const error = screen.getByTestId("error")
-      expect(error).toBeFalsy
+      expect(error).toBeTruthy()
      })
    })
 })
@@ -87,7 +86,7 @@ describe("When I am on NewBill Page",() => {
     // On simule l'envoi du formulaire
     const handleSubmit = jest.fn((e) => newBill.handleSubmit(e))
 
-    // On créé un billet test  
+    // On envoi un billet test  
     newBill.create = (newBill) => newBill
     newBill.fileUrl = testBill.fileUrl
     newBill.fileName = testBill.fileName 
@@ -98,11 +97,33 @@ describe("When I am on NewBill Page",() => {
     document.querySelector(`input[data-testid="datepicker"]`).value = testBill.date
     document.querySelector(`input[data-testid="vat"]`).value = testBill.vat
     document.querySelector(`input[data-testid="pct"]`).value = testBill.pct
-    document.querySelector(`textarea[data-testid="commentary"]`).value = testBill.commentary
-    
+    document.querySelector(`textarea[data-testid="commentary"]`).value = testBill.commentary   
     form.addEventListener('click', handleSubmit)
     fireEvent.click(form)
     expect(handleSubmit).toHaveBeenCalled()
+    })
+  })
+})
+
+// Test d'intégration POST 
+describe("Given I am a user connected as Employee", () => {
+  describe("When I am on  NewBills Page", () => {
+    test("fetches bills from mock API POST", async () => {
+      document.body.innerHTML = NewBillUI()
+      const spy = jest.spyOn(mockStore.bills(), "update")
+      const newBill = new NewBill({
+        document,
+        onNavigate,
+        store: mockStore,
+      })
+      const form = screen.getByTestId('form-new-bill') 
+      const handleSubmit = jest.fn((e) => newBill.handleSubmit(e))
+      form.addEventListener('click', handleSubmit)
+      fireEvent.click(form)
+      expect(handleSubmit).toHaveBeenCalled()
+      expect(spy).toHaveBeenCalled();
+      const bills = screen.getByTestId('tbody') 
+      expect(bills).toBeInTheDocument()    
     })
   })
 })

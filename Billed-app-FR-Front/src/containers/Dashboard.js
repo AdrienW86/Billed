@@ -141,16 +141,14 @@ export default class {
     } else {
       $(`#arrow-icon${this.index}`).css({ transform: 'rotate(90deg)'})
       $(`#status-bills-container${this.index}`)
-      .html("")    // Correction
+      .html("")    
       this.counter ++
     }
-    // Dashboard Error
+    // Correction comportement Dashboard 
     filteredBills(bills, getStatus(this.index)).forEach(bill => {
       $(`#open-bill${bill.id}`).click((e) => this.handleEditTicket(e, bill, bills))
     })
-
     return bills
-
   }
 
   getBillsAllUsers = () => {

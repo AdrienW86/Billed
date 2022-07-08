@@ -26,7 +26,7 @@ export default class NewBill {
     formData.append('file', file)
     formData.append('email', email)
 
-    //correctif
+    // Correctif bug format image
 
     const error = this.document.querySelector(".error");
     error.style.display = "none" 
